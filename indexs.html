@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Kalkulator Fungsi Lengkap</title>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjs@11/lib/browser/math.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #38bdf8;
+}
+
+.container {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+input, select, button {
+    padding: 8px;
+    margin: 5px;
+    border-radius: 6px;
+    border: none;
+}
+
+button {
+    background: #38bdf8;
+    color: black;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0ea5e9;
+}
+
+canvas {
+    background: white; /* 🔥 background grafik putih */
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.rumus {
+    color: #38bdf8;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<h1>📊 Kalkulator Fungsi, Limit & Laju</h1>
+
+<div class="container">
+<h2>1. Fungsi</h2>
+
+<select id="jenisFungsi" onchange="updateInput()">
+<option value="manual">Manual</option>
+<option value="linear">Linear</option>
+<option value="kuadrat">Kuadrat</option>
+<option value="eksponensial">Eksponensial</option>
+</select>
+
+<div id="manual">
+<input id="fungsi" placeholder="Contoh: x^2 - 4*x + 3" oninput="tampilkanRumus()">
+</div>
+
+<div id="linear" style="display:none;">
+a <input id="a1" oninput="tampilkanRumus()">
+b <input id="b1" oninput="tampilkanRumus()">
+</div>
+
+<div id="kuadrat" style="display:none;">
+a <input id="a2" oninput="tampilkanRumus()">
+b <input id="b2" oninput="tampilkanRumus()">
+c <input id="c2" oninput="tampilkanRumus()">
+</div>
+
+<div id="eksponensial" style="display:none;">
+a <input id="a3" oninput="tampilkanRumus()">
+</div>
+
+<p id="rumusFungsi" class="rumus"></p>
+
+<button onclick="gambarFungsi()">Tampilkan Grafik</button>
+
+<h3>Hitung Nilai f(x)</h3>
+<input id="nilaiX" placeholder="Masukkan nilai x">
+<button onclick="hitungNilai()">Hitung</button>
+<p id="hasilFx"></p>
+
+<canvas id="grafik"></canvas>
+</div>
+
+<div class="container">
+<h2>2. Laju Perubahan</h2>
+
+x1 <input id="x1">
+x2 <input id="x2">
+
+<button onclick="hitungLaju()">Hitung</button>
+<p id="hasilLaju"></p>
+</div>
+
+<div class="container">
+<h2>3. Limit</h2>
+
+<input id="fungsiLimit" placeholder="Contoh: (x^2 -1)/(x-1)">
+<input id="nilaiLimit" placeholder="x menuju">
+
+<button onclick="hitungLimit()">Hitung</button>
+<p id="hasilLimit"></p>
+
+<canvas id="grafikLimit"></canvas>
+</div>
+
+<script>
+let chart, chartLimit;
+
+function updateInput(){
+["manual","linear","kuadrat","eksponensial"].forEach(id=>{
+document.getElementById(id).style.display="none";
+});
+let jenis=document.getElementById("jenisFungsi").value;
+document.getElementById(jenis).style.display="block";
+tampilkanRumus();
+}
+
+function tampilkanRumus(){
+let jenis=document.getElementById("jenisFungsi").value;
+let teks="";
+
+if(jenis==="linear"){
+let a=a1.value||"a";
+let b=b1.value||"b";
+teks=`f(x) = ${a}x + ${b}`;
+}
+else if(jenis==="kuadrat"){
+let a=a2.value||"a";
+let b=b2.value||"b";
+let c=c2.value||"c";
+teks=`f(x) = ${a}x² + ${b}x + ${c}`;
+}
+else if(jenis==="eksponensial"){
+let a=a3.value||"a";
+teks=`f(x) = ${a}^x`;
+}
+else{
+teks=fungsi.value;
+}
+
+rumusFungsi.innerText=teks;
+}
+
+function getFungsi(){
+let jenis=document.getElementById("jenisFungsi").value;
+if(jenis=="manual") return fungsi.value;
+if(jenis=="linear") return `${a1.value}*x+${b1.value}`;
+if(jenis=="kuadrat") return `${a2.value}*x^2+${b2.value}*x+${c2.value}`;
+if(jenis=="eksponensial") return `${a3.value}^x`;
+}
+
+function gambarFungsi(){
+let expr = getFungsi();
+let x = [], y = [];
+
+// 🔥 loop rapi (tidak ada desimal aneh)
+for(let i = -10; i <= 10; i += 0.2){
+    let xi = parseFloat(i.toFixed(2)); // pembulatan
+    x.push(xi);
+    try{
+        y.push(math.evaluate(expr, {x: xi}));
+    }catch{
+        y.push(null);
+    }
+}
+
+// hapus grafik lama
+if(chart) chart.destroy();
+
+// buat grafik baru
+chart = new Chart(grafik, {
+    type: 'line',
+    data: {
+        labels: x,
+        datasets: [{
+            label: "Fungsi",
+            data: y,
+            borderColor: "#0ea5e9",
+            fill: false
+        }]
+    },
+options:{
+scales:{
+x:{
+ticks:{
+color:"#000",
+stepSize:1, // 🔥 lompat per 1
+callback: function(value){
+return Math.round(value); // 🔥 bulatkan
+}
+}
+},
+y:{
+ticks:{
+color:"#000",
+stepSize:10, // boleh ubah sesuai grafik
+callback: function(value){
+return Math.round(value);
+}
+}
+}
+}
+}
+});
+}
+
+function hitungNilai(){
+let expr=getFungsi();
+let x=parseFloat(nilaiX.value);
+
+let hasil;
+
+try{
+hasil=math.evaluate(expr,{x:x});
+}catch{
+hasil="Error";
+}
+
+hasilFx.innerText="f("+x+") = "+hasil;
+}
+
+function hitungLaju(){
+let expr=getFungsi();
+let x1=parseFloat(document.getElementById("x1").value);
+let x2=parseFloat(document.getElementById("x2").value);
+
+let f1=math.evaluate(expr,{x:x1});
+let f2=math.evaluate(expr,{x:x2});
+
+let hasil=(f2-f1)/(x2-x1);
+
+hasilLaju.innerText="Laju Perubahan = "+hasil;
+}
+
+function hitungLimit(){
+let expr=fungsiLimit.value;
+let a=parseFloat(nilaiLimit.value);
+
+let kiri=math.evaluate(expr,{x:a-0.0001});
+let kanan=math.evaluate(expr,{x:a+0.0001});
+
+hasilLimit.innerText="Limit ≈ "+((kiri+kanan)/2);
+
+let x=[],y=[];
+for(let i = -10; i <= 10; i += 1){
+    x.push(i);
+    try{
+        y.push(math.evaluate(expr,{x:i}));
+    }catch{
+        y.push(null);
+    }
+}
+if(chartLimit) chartLimit.destroy();
+
+chartLimit=new Chart(grafikLimit,{
+type:'line',
+data:{
+labels:x,
+datasets:[{
+label:"Limit",
+data:y,
+borderColor:"#ef4444",
+fill:false
+}]
+}
+});
+}
+</script>
+
+</body>
+</html>

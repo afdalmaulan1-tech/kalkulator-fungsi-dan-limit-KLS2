@@ -10,57 +10,94 @@
 <style>
 body {
     font-family: 'Segoe UI', sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
+    background: #eef2f7;
+    color: #1e293b;
     margin: 0;
     padding: 20px;
 }
 
 h1 {
     text-align: center;
-    color: #38bdf8;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 5px;
 }
 
-.container {
-    background: #1e293b;
-    padding: 20px;
-    border-radius: 12px;
+/* 🔥 Tambahan teks kelompok */
+.subjudul {
+    text-align: center;
+    font-size: 14px;
+    color: #64748b;
     margin-bottom: 20px;
 }
 
-input, select, button {
+.container {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+h2 {
+    margin-top: 0;
+    color: #1e293b;
+}
+
+input, select {
     padding: 8px;
     margin: 5px;
     border-radius: 6px;
-    border: none;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #2563eb;
 }
 
 button {
-    background: #38bdf8;
-    color: black;
+    background: #1e3a8a;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
     cursor: pointer;
 }
 
 button:hover {
-    background: #0ea5e9;
+    background: #1d4ed8;
 }
 
 canvas {
-    background: white; /* 🔥 background grafik putih */
-    border-radius: 10px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
     margin-top: 10px;
 }
 
 .rumus {
-    color: #38bdf8;
-    font-weight: bold;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+.hasil-box {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #f1f5f9;
+    border-left: 4px solid #1e3a8a;
 }
 </style>
+
 </head>
 
 <body>
 
-<h1>📊 Kalkulator Fungsi, Limit & Laju</h1>
+<h1>Kalkulator Fungsi, Limit & Laju</h1>
+<p class="subjudul">Kelompok 2 – Kalkulus</p>
 
 <div class="container">
 <h2>1. Fungsi</h2>
@@ -119,8 +156,9 @@ x2 <input id="x2">
 <input id="fungsiLimit" placeholder="Contoh: (x^2 -1)/(x-1)">
 <input id="nilaiLimit" placeholder="x menuju">
 
-<button onclick="hitungLimit()">Hitung</button>
-<p id="hasilLimit"></p>
+<button onclick="hitungLimit()">Analisis Limit</button>
+
+<div id="hasilLimit" class="hasil-box"></div>
 
 <canvas id="grafikLimit"></canvas>
 </div>
@@ -173,49 +211,35 @@ if(jenis=="eksponensial") return `${a3.value}^x`;
 
 function gambarFungsi(){
 let expr = getFungsi();
-let x = [], y = [];
+let x=[], y=[];
 
-// 🔥 loop rapi (tidak ada desimal aneh)
-for(let i = -10; i <= 10; i += 0.2){
-    let xi = parseFloat(i.toFixed(2)); // pembulatan
-    x.push(xi);
-    try{
-        y.push(math.evaluate(expr, {x: xi}));
-    }catch{
-        y.push(null);
+for(let i=-10;i<=10;i++){
+    x.push(i);
+    try{ 
+        let val = math.evaluate(expr,{x:i});
+        y.push(Math.round(val));
     }
+    catch{ y.push(null); }
 }
 
-// hapus grafik lama
 if(chart) chart.destroy();
 
-// buat grafik baru
-chart = new Chart(grafik, {
-    type: 'line',
-    data: {
-        labels: x,
-        datasets: [{
-            label: "Fungsi",
-            data: y,
-            borderColor: "#0ea5e9",
-            fill: false
-        }]
-    },
+chart = new Chart(grafik,{
+type:'line',
+data:{
+labels:x,
+datasets:[{
+label:"Fungsi",
+data:y,
+borderColor:"#1e3a8a",
+fill:false,
+tension:0.2
+}]
+},
 options:{
 scales:{
-x:{
-ticks:{
-color:"#000",
-stepSize:1, // 🔥 lompat per 1
-callback: function(value){
-return Math.round(value); // 🔥 bulatkan
-}
-}
-},
 y:{
 ticks:{
-color:"#000",
-stepSize:10, // boleh ubah sesuai grafik
 callback: function(value){
 return Math.round(value);
 }
@@ -231,14 +255,10 @@ let expr=getFungsi();
 let x=parseFloat(nilaiX.value);
 
 let hasil;
+try{ hasil=math.evaluate(expr,{x:x}); }
+catch{ hasil="Error"; }
 
-try{
-hasil=math.evaluate(expr,{x:x});
-}catch{
-hasil="Error";
-}
-
-hasilFx.innerText="f("+x+") = "+hasil;
+hasilFx.innerText="f("+x+") = "+Math.round(hasil);
 }
 
 function hitungLaju(){
@@ -251,27 +271,60 @@ let f2=math.evaluate(expr,{x:x2});
 
 let hasil=(f2-f1)/(x2-x1);
 
-hasilLaju.innerText="Laju Perubahan = "+hasil;
+hasilLaju.innerText="Laju Perubahan = "+Math.round(hasil);
 }
 
 function hitungLimit(){
 let expr=fungsiLimit.value;
 let a=parseFloat(nilaiLimit.value);
 
-let kiri=math.evaluate(expr,{x:a-0.0001});
-let kanan=math.evaluate(expr,{x:a+0.0001});
+let kiri, kanan;
 
-hasilLimit.innerText="Limit ≈ "+((kiri+kanan)/2);
+try{
+kiri=math.evaluate(expr,{x:a-0.0001});
+kanan=math.evaluate(expr,{x:a+0.0001});
+}catch{
+hasilLimit.innerText="Error";
+return;
+}
+
+let hasil="", sistem="", warna="";
+
+if(!isFinite(kiri)||!isFinite(kanan)){
+hasil="∞";
+sistem="Sistem tidak stabil";
+warna="#fee2e2";
+}
+else if(Math.abs(kiri-kanan)<0.01){
+hasil=Math.round((kiri+kanan)/2);
+sistem="Sistem stabil";
+warna="#dcfce7";
+}
+else{
+hasil="Tidak ada";
+sistem="Diskontinu (loncat)";
+warna="#fef9c3";
+}
+
+hasilLimit.style.background=warna;
+
+hasilLimit.innerHTML=`
+Limit kiri ≈ ${Math.round(kiri)} <br>
+Limit kanan ≈ ${Math.round(kanan)} <br><br>
+<b>Hasil:</b> ${hasil} <br>
+<b>Analisis:</b> ${sistem}
+`;
 
 let x=[],y=[];
-for(let i = -10; i <= 10; i += 1){
-    x.push(i);
-    try{
-        y.push(math.evaluate(expr,{x:i}));
-    }catch{
-        y.push(null);
-    }
+for(let i=-10;i<=10;i++){
+x.push(i);
+try{ 
+    let val = math.evaluate(expr,{x:i});
+    y.push(Math.round(val));
 }
+catch{ y.push(null); }
+}
+
 if(chartLimit) chartLimit.destroy();
 
 chartLimit=new Chart(grafikLimit,{
@@ -281,9 +334,21 @@ labels:x,
 datasets:[{
 label:"Limit",
 data:y,
-borderColor:"#ef4444",
-fill:false
+borderColor:"#b91c1c",
+fill:false,
+tension:0.2
 }]
+},
+options:{
+scales:{
+y:{
+ticks:{
+callback: function(value){
+return Math.round(value);
+}
+}
+}
+}
 }
 });
 }

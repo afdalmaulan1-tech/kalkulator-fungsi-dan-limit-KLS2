@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Kalkulus</title>
+  
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- KaTeX untuk rendering LaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  
+  <!-- MathJS untuk evaluasi matematika -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjs@11/lib/browser/math.js"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>Kalkulator Kalkulus</h1>
+      <p>Kelompok 2 - Fungsi, Laju Perubahan, dan Limit</p>
+    </div>
+
+    <!-- Bagian 1: Fungsi -->
+    <div class="card">
+
+      <div class="kembali-container">
+          <a href="index.html" class="btn-kembali">
+          ← Kembali ke Beranda
+      </a>
+      </div>
+
+      <h2>1. Fungsi</h2>
+
+      <div class="fungsi-selector">
+
+      <button type="button"
+              class="fungsi-btn active"
+              onclick="pilihFungsi('linear', this)">
+        Linear
+      </button>
+
+      <button type="button"
+              class="fungsi-btn"
+              onclick="pilihFungsi('kuadrat', this)">
+        Kuadrat
+      </button>
+
+      <button type="button"
+              class="fungsi-btn"
+              onclick="pilihFungsi('eksponensial', this)">
+        Eksponensial
+      </button>
+
+    </div>
+
+    <input type="hidden"
+          id="jenisFungsi"
+          value="linear">
+
+    <!-- INPUT LINEAR -->
+    <div id="linear">
+
+      <input id="a1"
+            type="number"
+            placeholder="Koefisien a"
+            step="any"
+            oninput="tampilkanRumus()">
+
+      <input id="b1"
+            type="number"
+            placeholder="Konstanta b"
+            step="any"
+            oninput="tampilkanRumus()">
+
+    </div>
+
+
+<!-- INPUT KUADRAT -->
+<div id="kuadrat" style="display:none;">
+
+  <input id="a2"
+         type="number"
+         placeholder="Koefisien a"
+         step="any"
+         oninput="tampilkanRumus()">
+
+  <input id="b2"
+         type="number"
+         placeholder="Koefisien b"
+         step="any"
+         oninput="tampilkanRumus()">
+
+  <input id="c2"
+         type="number"
+         placeholder="Konstanta c"
+         step="any"
+         oninput="tampilkanRumus()">
+
+</div>
+
+<!-- INPUT EKSPONENSIAL -->
+<div id="eksponensial" style="display:none;">
+
+  <input id="a3"
+         type="number"
+         placeholder="Basis eksponensial"
+         step="any"
+         oninput="tampilkanRumus()">
+
+</div>
+
+<div class="rumus-display" id="rumusFungsi"></div>
+
+<h3>Hitung Nilai f(x)</h3>
+
+<input id="nilaiX"
+       type="number"
+       placeholder="Masukkan nilai x"
+       step="any">
+
+<button onclick="hitungNilai()">
+  Hitung
+</button>
+
+<div id="hasilFx"
+     class="hasil"
+     style="display:none;">
+</div>
+
+</div>
+
+    <!-- Bagian 2: Laju Perubahan -->
+    <div class="card">
+      <h2>2. Laju Perubahan</h2>
+
+      <div class="row">
+        <input id="x1" type="number" placeholder="Nilai x₁" step="any">
+        <input id="x2" type="number" placeholder="Nilai x₂" step="any">
+      </div>
+
+      <button onclick="hitungLaju()">Hitung Laju</button>
+
+      <div id="hasilLaju" class="hasil" style="display: none;"></div>
+    </div>
+
+    <!-- Bagian 3: Analisis Limit -->
+    <div class="card">
+      <h2>3. Analisis Limit</h2>
+
+<div class="rumus-display" id="rumusLimit"></div>
+
+<input
+  id="nilaiLimit"
+  type="number"
+  placeholder="Masukkan nilai x yang dituju"
+  step="any"
+>
+
+<button onclick="hitungLimit()">
+  Analisis Limit
+</button>
+
+<div id="hasilLimit" class="hasil" style="display:none;"></div>
+
+<div id="visualLimit" class="visual-limit" style="display:none;"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

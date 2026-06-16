@@ -1,0 +1,268 @@
+﻿* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f8fafc;
+  color: #1e293b;
+  padding: 30px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 32px;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.header p {
+  color: #64748b;
+}
+
+.container {
+  max-width: 850px;
+  margin: auto;
+}
+
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+  margin-bottom: 15px;
+  color: #1e3a8a;
+}
+
+.card h3 {
+  margin-top: 20px;
+  color: #334155;
+}
+
+.kembali-container {
+  margin-bottom: 30px;
+}
+.btn-kembali{
+    text-decoration: none;
+    color: #3366ff;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.btn-kembali:hover{
+    text-decoration: underline;
+} 
+
+/* ================================= */
+/* PILIHAN MODEL FUNGSI */
+/* ================================= */
+
+.fungsi-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.fungsi-btn {
+  flex: 1;
+  background: white;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.fungsi-btn:hover {
+  background: #dbeafe;
+}
+
+.fungsi-btn.active {
+  background: #2563eb;
+  color: white;
+}
+
+@media (max-width: 700px) {
+  .fungsi-selector {
+    flex-direction: column;
+  }
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: 500;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+.hasil {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f1f5f9;
+  border-left: 4px solid #2563eb;
+  border-radius: 8px;
+  line-height: 1.6;
+}
+
+.rumus-display {
+  margin-top: 15px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  font-size: 18px;
+  text-align: center;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rumus-display .katex-display {
+  margin: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* KaTeX styling */
+.katex-display {
+  margin: 10px 0;
+}
+
+.katex {
+  font-size: 1.1em;
+}
+
+.visual-limit {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+}
+
+.limit-title {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #1e3a8a;
+}
+
+.number-line {
+  position: relative;
+  height: 100px;
+  margin: 20px 0;
+}
+
+.line {
+  position: absolute;
+  top: 35px;
+  left: 5%;
+  width: 90%;
+  height: 4px;
+  background: #2563eb;
+}
+
+.point {
+  position: absolute;
+  top: 20px;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.point .tick {
+  width: 3px;
+  height: 30px;
+  background: #1e293b;
+  margin: auto;
+}
+
+.point .xvalue {
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.point .fxvalue {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 5px;
+}
+
+.center-point .tick {
+  background: #ef4444;
+  height: 40px;
+}
+
+.limit-summary {
+  margin-top: 20px;
+  padding: 15px;
+  background: white;
+  border-radius: 10px;
+  border-left: 5px solid #2563eb;
+}
+
+/* Responsive design */
+@media (max-width: 700px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .header h1 {
+    font-size: 24px;
+  }
+
+  .card {
+    padding: 15px;
+  }
+
+  .rumus-display {
+    font-size: 14px;
+    min-height: 50px;
+  }
+}
